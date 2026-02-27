@@ -22,7 +22,6 @@
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.4",
     "mongoose": "^7.6.12",
-    "mongoose-auto-increment": "^5.0.1",
     "mongoose-sequence": "^5.3.1",
     "validator": "^13.9.0"
   },

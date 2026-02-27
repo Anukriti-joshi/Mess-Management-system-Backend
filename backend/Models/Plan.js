@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import autoIncrement from 'mongoose-auto-increment'
 // import validator from 'validator';
 
 
@@ -48,10 +47,6 @@ planSchema.pre("save", async function (next) {
 
     next()
   });
-
-// autoIncrement.initialize(mongoose.connection); // 3. initialize autoIncrement 
-
-// planSchema.plugin(autoIncrement.plugin, 'planId')
 
 const Plan = mongoose.models.plan || mongoose.model('plan' , planSchema)
 
