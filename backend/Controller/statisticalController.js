@@ -59,13 +59,7 @@ export const getDayMemebr = asyncHandler(async (req , res) => {
             {
                 $group : {
                     _id: "$attendance.date",
-                    Users : { $push : '$attendance'}
-                }
-            },
-            {
-                $group : {
-                    _id:"$_id",
-                    count:{$count: {}}
+                    count: { $sum: 1 }
                 }
             }
         ]
@@ -86,7 +80,9 @@ export const getDayMemebr = asyncHandler(async (req , res) => {
       
     var groupedPeople = groupBy(users, '_id');
     groupedPeople  = Object.entries(groupedPeople).map(entry => {
-        return {"date": entry[0],"value": entry[1].length};
+        // Sum up counts for entries on the same date
+        const totalCount = entry[1].reduce((sum, item) => sum + item.count, 0);
+        return {"date": entry[0],"value": totalCount};
       });
 
     res.json(groupedPeople)
