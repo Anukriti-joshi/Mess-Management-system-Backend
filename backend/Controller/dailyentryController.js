@@ -10,12 +10,18 @@ export const getUserEntryDetail = asyncHandler(async (req , res) => {
         return res.status(400).json({ message: 'User ID Required' })
     }
 
-    const entry = await DailyEntry.findOne({"userId":userId})
+    let entry = await DailyEntry.findOne({"userId": parseInt(userId)})
 
-    const start_end = entry.attendance[0].date.getDate()
-
-    const end_date = entry.attendance[entry.attendance.length-1].date.getDate()
-
+    // If no DailyEntry exists for this user, create one
+    if (!entry) {
+        const today_date = new Date();
+        today_date.setDate(today_date.getDate() - 1);
+        const newEntry = new DailyEntry({
+            userId: parseInt(userId),
+            attendance: [{ date: today_date }]
+        });
+        entry = await newEntry.save();
+    }
 
     res.json(entry);
 
@@ -30,10 +36,17 @@ export const updateDailyEntry = asyncHandler(async (req, res) => {
     }
 
     // Does the user exist to update?
-    const user = await DailyEntry.findOne({"userId":userId}).exec()
+    let user = await DailyEntry.findOne({"userId": parseInt(userId)}).exec()
 
+    // If no DailyEntry exists, create one
     if (!user) {
-            return res.status(400).json({ message: 'User not found'});
+        const today_date = new Date();
+        today_date.setDate(today_date.getDate() - 1);
+        const newEntry = new DailyEntry({
+            userId: parseInt(userId),
+            attendance: [{ date: today_date }]
+        });
+        user = await newEntry.save();
     }
 
     const date = new Date()
